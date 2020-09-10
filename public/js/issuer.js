@@ -18,8 +18,7 @@ document.on("DOMContentLoaded", async e => {
   const CMD = `/Applications/Google\\ Chrome\\ Canary.app/Contents/MacOS/Google\\ Chrome\\ Canary \\
   --additional-trust-token-key-commitments='${JSON.stringify(COMMITMENT)}' \\
   --auto-open-devtools-for-tabs \\
-  --v=1 \\
-  https://cotton-aeolian-caper.glitch.me/
+  --v=1
   `;
 
   $("#flag").textContent = CMD;
