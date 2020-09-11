@@ -7,26 +7,26 @@ all:
 	make issue
 	make redemption
 
-trust_token: c/trust_token.c
-	$(CC) c/trust_token.c -o ./bin/trust_token $(CFLAGS)
+trust_token: src/trust_token.c
+	$(CC) src/trust_token.c -o ./bin/trust_token $(CFLAGS)
 	./bin/trust_token
 
 
-key_generator: c/util.o
-	$(CC) c/key_generator.c -o ./bin/key_generator c/util.o $(CFLAGS)
+key_generator: src/util.o
+	$(CC) src/key_generator.c -o ./bin/key_generator src/util.o $(CFLAGS)
 
-issue: c/util.o
-	$(CC) c/issue.c -o ./bin/issue c/util.o $(CFLAGS)
+issue: src/util.o
+	$(CC) src/issue.c -o ./bin/issue src/util.o $(CFLAGS)
 
-redemption: c/util.o
-	$(CC) c/redemption.c -o ./bin/redemption c/util.o $(CFLAGS)
+redemption: src/util.o
+	$(CC) src/redemption.c -o ./bin/redemption src/util.o $(CFLAGS)
 
 
 util.o:
-	$(CC) -c c/util.c -o./c/util.o $(CFLAGS)
+	$(CC) -c src/util.c -o./src/util.o $(CFLAGS)
 
-main: c/util.o
-	$(CC) c/main.c -o ./bin/main c/util.o $(CFLAGS)
+main: src/util.o
+	$(CC) src/main.c -o ./bin/main src/util.o $(CFLAGS)
 	./bin/main
 
 
