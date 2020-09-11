@@ -18,15 +18,14 @@ document.on("DOMContentLoaded", async e => {
   const CMD = `/Applications/Google\\ Chrome\\ Canary.app/Contents/MacOS/Google\\ Chrome\\ Canary \\
   --additional-trust-token-key-commitments='${JSON.stringify(COMMITMENT)}' \\
   --auto-open-devtools-for-tabs \\
-  --v=1 \\
-  https://cotton-aeolian-caper.glitch.me/ \\
-  > canary_debuglog.txt 2>&1
+  --v=1
   `;
 
   $("#flag").textContent = CMD;
 
   $("#yes").on("click", async () => {
-    const res = await fetch(`/.well-known/trust-token/request`, {
+    // issuer request
+    await fetch(`/.well-known/trust-token/request`, {
       method: "POST",
       trustToken: {
         type: "token-request",
@@ -34,12 +33,12 @@ document.on("DOMContentLoaded", async e => {
       }
     });
 
-    console.log(res);
-
+    // check token exists
     const token = await document.hasTrustToken(ISSUER);
     console.log(token);
 
-    const res2 = await fetch(`/.well-known/trust-token/redemption`, {
+    // redemption request
+    await fetch(`/.well-known/trust-token/redemption`, {
       method: "POST",
       trustToken: {
         type: "srr-token-redemption",
@@ -47,17 +46,17 @@ document.on("DOMContentLoaded", async e => {
         refreshPolicy: "refresh"
       }
     });
-    console.log(res2);
 
-    const res3 = await fetch(`/.well-known/trust-token/send-srr`, {
+    // send SRR and echo Sec-Signed-Eedemption-Record
+    const res = await fetch(`/.well-known/trust-token/send-srr`, {
       method: "POST",
       trustToken: {
         type: "send-srr",
-        issuer: ISSUER,
+        issuer: ISSUER, // deprecated
         issuers: [ISSUER]
       }
     });
-    const body = await res3.text();
+    const body = await res.text();
     console.log(body);
 
     // TODO: structured-header decode

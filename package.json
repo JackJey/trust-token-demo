@@ -9,7 +9,7 @@
     "express": "^4.17.1"
   },
   "trust_token": {
-    "ISSUER": "https://cotton-aeolian-caper.glitch.me/",
+    "ISSUER": "https://trust-token-demo.glitch.me/",
     "protocol_version": "TrustTokenV1",
     "batchsize": 10,
     "expiry": "1622574000000000"
