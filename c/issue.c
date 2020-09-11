@@ -1,54 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <openssl/base64.h>
-#include <openssl/bytestring.h>
-#include <openssl/curve25519.h>
 #include <openssl/evp.h>
-#include <openssl/mem.h>
 #include <openssl/rand.h>
-#include <openssl/sha.h>
 #include <openssl/trust_token.h>
+#include "util.h"
 
-void hexdump(uint8_t *s, size_t len) {
-  for(int i = 0; i < 3; i++) {
-    fprintf(stderr, "0x%02x,", s[i]);
-  }
-  fprintf(stderr, "...");
-  for(int j = len-3; j < len; j++) {
-    fprintf(stderr, "0x%02x,", s[j]);
-  }
-  fprintf(stderr, "\n");
-}
-
-int base64_encode(uint8_t *buff, size_t buff_len,
-                  uint8_t **out, size_t *out_len) {
-  size_t encoded_len;
-  if (!EVP_EncodedLength(&encoded_len, buff_len)) {
-    fprintf(stderr, "failed to calculate base64 length");
-    return 0;
-  }
-
-  *out = (uint8_t*)malloc((encoded_len)*sizeof(uint8_t));
-  *out_len  = EVP_EncodeBlock(*out, buff, buff_len);
-  return 1;
-}
-
-int base64_decode(uint8_t *buff, size_t buff_len,
-                  uint8_t **out, size_t *out_len) {
-  size_t decoded_len;
-  if (!EVP_DecodedLength(&decoded_len, buff_len)) {
-    fprintf(stderr, "failed to calculate decode length\n");
-    return 0;
-  }
-
-  *out = (uint8_t*)malloc(decoded_len*sizeof(uint8_t));
-  if (!EVP_DecodeBase64(*out, out_len, decoded_len, buff, buff_len)) {
-    fprintf(stderr, "failed to decode base64\n");
-    return 0;
-  }
-  return 1;
-}
+#define PRIV_KEY_PATH      "./keys/priv_key.txt"
+#define PUB_KEY_PATH       "./keys/pub_key.txt"
+#define SRR_PRIV_KEY_PATH  "./keys/srr_priv_key.txt"
+#define SRR_PUB_KEY_PATH   "./keys/srr_pub_key.txt"
 
 int main(int argc,char *argv[]) {
   if (argc < 2) {
@@ -77,8 +38,16 @@ int main(int argc,char *argv[]) {
   }
 
   // 4. Private Key
-  uint8_t priv_key_base64[]   = "AAAAAQgqmjlRQTPB3JZVxDkpKFpxkQVIi1hznN4HU7vgEAQ5lT90Q1hGHBBH55we8HSUgeqq2t6KwjHnwWcLQeHCafpqQvSfeaOQwHOS9+1k9ccuu7d35BmrVE0dQl7l/yRg9nEEqX9Aopn/81tO//ImdvtV5540r8iJbRzhQI8t+DBNmnxRWm4ECq2idPgLet80raieM+3B+SBJaLSQxZF1e4vcdkxZx1ke1fig4PMOmdIYclP9rFxK2iOX46CccSSfi0sU+l5hS4ayXJM5C9ybkk9cM5JfBGMnNJNOAJWs2oznW13TW/N8G2Y8upc8AO4EhBqDVt/pm1QLCqb6ov06Uh0dKby78xZYrAn0l6RAL62w6ocAF6NeD9uOSXgEAYKVBw==";
-  size_t  priv_key_base64_len = sizeof(priv_key_base64) - 1;
+  size_t priv_key_base64_size;
+  uint8_t *priv_key_base64;
+  // uint8_t priv_key_base64[]   = "AAAAAQgqmjlRQTPB3JZVxDkpKFpxkQVIi1hznN4HU7vgEAQ5lT90Q1hGHBBH55we8HSUgeqq2t6KwjHnwWcLQeHCafpqQvSfeaOQwHOS9+1k9ccuu7d35BmrVE0dQl7l/yRg9nEEqX9Aopn/81tO//ImdvtV5540r8iJbRzhQI8t+DBNmnxRWm4ECq2idPgLet80raieM+3B+SBJaLSQxZF1e4vcdkxZx1ke1fig4PMOmdIYclP9rFxK2iOX46CccSSfi0sU+l5hS4ayXJM5C9ybkk9cM5JfBGMnNJNOAJWs2oznW13TW/N8G2Y8upc8AO4EhBqDVt/pm1QLCqb6ov06Uh0dKby78xZYrAn0l6RAL62w6ocAF6NeD9uOSXgEAYKVBw==";
+  if (!read_file(PRIV_KEY_PATH, &priv_key_base64, &priv_key_base64_size)) {
+    fprintf(stderr, "failed to read file\n");
+    exit(1);
+  };
+  fprintf(stderr, "priv_key_base64(%ld): %s", priv_key_base64_size, priv_key_base64);
+
+  size_t priv_key_base64_len = priv_key_base64_size  - 1;
 
   size_t priv_key_len;
   uint8_t* priv_key;
@@ -93,8 +62,16 @@ int main(int argc,char *argv[]) {
   }
 
   // 6. ED25519 Private Key
-  uint8_t srr_priv_key_base64[]   = "h3bsKoAIBeghGumCc5KOcrpvTDwx9wpYFir+HPIVgaNe3/jA/GfHdRkWbMF9p1jARGu+nRfewtbu8UeGtAzujA==";
-  size_t  srr_priv_key_base64_len = sizeof(srr_priv_key_base64) - 1;
+  size_t srr_priv_key_base64_size;
+  uint8_t *srr_priv_key_base64;
+  // uint8_t srr_priv_key_base64[]   = "h3bsKoAIBeghGumCc5KOcrpvTDwx9wpYFir+HPIVgaNe3/jA/GfHdRkWbMF9p1jARGu+nRfewtbu8UeGtAzujA==";
+  if (!read_file(SRR_PRIV_KEY_PATH, &srr_priv_key_base64, &srr_priv_key_base64_size)) {
+    fprintf(stderr, "failed to read file\n");
+    exit(1);
+  };
+  fprintf(stderr, "srr_priv_key_base64(%ld): %s", srr_priv_key_base64_size, srr_priv_key_base64);
+
+  size_t  srr_priv_key_base64_len = srr_priv_key_base64_size - 1;
 
   size_t srr_priv_key_len;
   uint8_t* srr_priv_key;
