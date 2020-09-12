@@ -1,10 +1,9 @@
+const fs = require("fs");
 const childProcess = require("child_process");
 const util = require("util");
 const exec = util.promisify(childProcess.exec);
 const express = require("express");
 const app = express();
-
-const trust_token_key = require("./trust_token_key.json");
 
 app.use(express.static("."));
 
@@ -16,8 +15,14 @@ app.get("/.well-known/trust-token/key-commitment", (req, res) => {
   console.log(req.path);
   const { trust_token } = require("./package.json");
   const { ISSUER, protocol_version, batchsize, expiry } = trust_token;
-  const srrkey = trust_token_key.srr_pub_key_base64;
-  const Y = trust_token_key.pub_key_base64;
+  const srrkey = fs
+    .readFileSync("./keys/srr_pub_key.txt")
+    .toString()
+    .trim();
+  const Y = fs
+    .readFileSync("./keys/pub_key.txt")
+    .toString()
+    .trim();
 
   const COMMITMENT = {};
   COMMITMENT[ISSUER] = {
@@ -33,10 +38,10 @@ app.get("/.well-known/trust-token/key-commitment", (req, res) => {
   });
 });
 
-app.post(`/.well-known/trust-token/request`, async (req, res) => {
+app.post(`/.well-known/trust-token/issuance`, async (req, res) => {
   console.log(req.path);
   const sec_trust_token = req.headers["sec-trust-token"];
-  const result = await exec(`./bin/issue ${sec_trust_token}`);
+  const result = await exec(`./bin/main --issue ${sec_trust_token}`);
   const token = result.stdout;
   res.append("sec-trust-token", token);
   res.send();
@@ -45,7 +50,7 @@ app.post(`/.well-known/trust-token/request`, async (req, res) => {
 app.post(`/.well-known/trust-token/redemption`, async (req, res) => {
   console.log(req.path);
   const sec_trust_token = req.headers["sec-trust-token"];
-  const result = await exec(`./bin/redemption ${sec_trust_token}`);
+  const result = await exec(`./bin/main --redeem ${sec_trust_token}`);
   const token = result.stdout;
   res.append("sec-trust-token", token);
   res.send();
