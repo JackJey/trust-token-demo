@@ -14,7 +14,11 @@ int issue(uint8_t *request_base64, size_t request_base64_len, uint8_t **response
 
   // 2. Base64 decode
   size_t request_len;
-  uint8_t* request; base64_decode(request_base64, request_base64_len, &request, &request_len);
+  uint8_t* request;
+  if (!base64_decode(request_base64, request_base64_len, &request, &request_len)) {
+    fprintf(stderr, "failed to decode base64\n");
+    return 0;
+  }
 
   // 3. Trust Token Issuer
   const TRUST_TOKEN_METHOD *method = TRUST_TOKEN_experiment_v1();
@@ -33,11 +37,16 @@ int issue(uint8_t *request_base64, size_t request_base64_len, uint8_t **response
     return 0;
   };
 
-  size_t priv_key_base64_len = priv_key_base64_size  - 1;
+  size_t priv_key_base64_len = priv_key_base64_size - 1;
+
+  fprintf(stderr, "priv_key_base64_len: %ld", priv_key_base64_len);
 
   size_t priv_key_len;
   uint8_t* priv_key;
-  base64_decode(priv_key_base64, priv_key_base64_len, &priv_key, &priv_key_len);
+  if (!base64_decode(priv_key_base64, priv_key_base64_len, &priv_key, &priv_key_len)) {
+    fprintf(stderr, "failed to decode base64\n");
+    return 0;
+  }
 
   // 5. Add Private Key to Issuer
   if (!TRUST_TOKEN_ISSUER_add_key(issuer, priv_key, priv_key_len)) {
@@ -57,7 +66,10 @@ int issue(uint8_t *request_base64, size_t request_base64_len, uint8_t **response
 
   size_t srr_priv_key_len;
   uint8_t* srr_priv_key;
-  base64_decode(srr_priv_key_base64, srr_priv_key_base64_len, &srr_priv_key, &srr_priv_key_len);
+  if (!base64_decode(srr_priv_key_base64, srr_priv_key_base64_len, &srr_priv_key, &srr_priv_key_len)) {
+    fprintf(stderr, "failed to decode base64\n");
+    return 0;
+  }
 
   // 7. Private Key to |EVP_PKEY|
   // 1:success, 0:error

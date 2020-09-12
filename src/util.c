@@ -16,7 +16,7 @@ int read_file(char *file_name, uint8_t **file_body, size_t *file_size) {
   }
 
   struct stat file_stat;
-  if(fstat(file, &file_stat) < 0) {
+  if (fstat(file, &file_stat) < 0) {
     return 0;
   }
 
@@ -58,7 +58,11 @@ int write_file(char *file_name, uint8_t *file_body, size_t file_size) {
     return 0;
   }
 
-  fprintf(stderr, "size: %ld", size);
+  char ln[] = {'\n'};
+  if (fwrite(ln, sizeof(char), 1, fp) != 1) {
+    fprintf(stderr, "failed to write \\n: %ld", size);
+    return 0;
+  }
 
   if (EOF == fclose(fp)) {
     fprintf(stderr, "failed to close file: %s", file_name);
@@ -100,7 +104,7 @@ int base64_encode(uint8_t *buff, size_t buff_len, uint8_t **out, size_t *out_len
   }
 
   *out = (uint8_t*)malloc((encoded_len)*sizeof(uint8_t));
-  *out_len  = EVP_EncodeBlock(*out, buff, buff_len);
+  *out_len = EVP_EncodeBlock(*out, buff, buff_len);
   return 1;
 }
 

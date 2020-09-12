@@ -14,10 +14,9 @@ def log(*a)
 end
 
 def key_commitment()
-  trust_token     = JSON.parse(File.read('./package.json'))['trust_token']
-
-  srrkey           = File.read('./keys/srr_pub_key.txt')
-  y                = File.read('./keys/pub_key.txt')
+  trust_token      = JSON.parse(File.read('./package.json'))['trust_token']
+  srrkey           = File.read('./keys/srr_pub_key.txt').chomp
+  y                = File.read('./keys/pub_key.txt').chomp
   issuer           = trust_token['ISSUER']
   protocol_version = trust_token['protocol_version']
   batchsize        = trust_token['batchsize']
@@ -56,8 +55,8 @@ def issue()
   token = `./bin/main --issue #{sec_trust_token}`
 
   headers = {
-    "Content-Type"   => "text/html; charset=utf-8",
-    "Content-Length" => "0",
+    "Content-Type"    => "text/html; charset=utf-8",
+    "Content-Length"  => "0",
     "Sec-Trust-Token" => token,
   }.entries().map{|e| e.join(": ")}.join("\n")
   html = ""
@@ -74,8 +73,8 @@ def redemption()
   token = `./bin/main --redeem #{sec_trust_token}`
 
   headers = {
-    "Content-Type"   => "text/html; charset=utf-8",
-    "Content-Length" => "0",
+    "Content-Type"    => "text/html; charset=utf-8",
+    "Content-Length"  => "0",
     "Sec-Trust-Token" => token,
   }.entries().map{|e| e.join(": ")}.join("\n")
   html = ""

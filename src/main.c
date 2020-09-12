@@ -27,7 +27,10 @@ int main(int argc, char *argv[]) {
 
     uint8_t* response_base64;
     size_t response_base64_len;
-    issue(request_base64, request_base64_len, &response_base64, &response_base64_len);
+    if (!issue(request_base64, request_base64_len, &response_base64, &response_base64_len)) {
+      fprintf(stderr, "failed to issue\n");
+      return EXIT_FAILURE;
+    }
     fprintf(stderr, "\e[0;31mISSUE RESPONSE(%lu)\e[0m: %s\n\n", response_base64_len, response_base64);
 
     // output for stdout
@@ -43,7 +46,10 @@ int main(int argc, char *argv[]) {
 
     uint8_t* response_base64;
     size_t response_base64_len;
-    redeem(request_base64, request_base64_len, &response_base64, &response_base64_len);
+    if (!redeem(request_base64, request_base64_len, &response_base64, &response_base64_len)) {
+      fprintf(stderr, "failed to redeem\n");
+      return EXIT_FAILURE;
+    }
     fprintf(stderr, "\e[0;31mREDEEM RESPONSE(%lu)\e[0m: %s\n", response_base64_len, response_base64);
 
     // output for stdout
@@ -54,7 +60,7 @@ int main(int argc, char *argv[]) {
 
   if (strcmp(flag, FLAG_KEY_GENERATE) == 0 && argc == 2) {
     base64_keys_t keys;
-    if (key_generate(&keys)) {
+    if (!key_generate(&keys)) {
       fprintf(stderr, "failed to generate keys\n");
       return EXIT_FAILURE;
     };
@@ -73,11 +79,11 @@ int main(int argc, char *argv[]) {
         );
 
     // save to file
-    if (!write_file("./keys/priv_key.txt",     keys.priv_key_base64,     keys.priv_key_base64_len)) {
+    if (!write_file("./keys/priv_key.txt", keys.priv_key_base64, keys.priv_key_base64_len)) {
       fprintf(stderr, "failed to write key");
       return EXIT_FAILURE;
     }
-    if (!write_file("./keys/pub_key.txt",      keys.pub_key_base64,      keys.pub_key_base64_len)) {
+    if (!write_file("./keys/pub_key.txt", keys.pub_key_base64, keys.pub_key_base64_len)) {
       fprintf(stderr, "failed to write key");
       return EXIT_FAILURE;
     }
@@ -85,7 +91,7 @@ int main(int argc, char *argv[]) {
       fprintf(stderr, "failed to write key");
       return EXIT_FAILURE;
     }
-    if (!write_file("./keys/srr_pub_key.txt",  keys.srr_pub_key_base64,  keys.srr_pub_key_base64_len)) {
+    if (!write_file("./keys/srr_pub_key.txt", keys.srr_pub_key_base64, keys.srr_pub_key_base64_len)) {
       fprintf(stderr, "failed to write key");
       return EXIT_FAILURE;
     }
