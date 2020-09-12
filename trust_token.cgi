@@ -110,7 +110,7 @@ begin
   case uri
   when "/.well-known/trust-token/key-commitment"
     key_commitment()
-  when "/.well-known/trust-token/request"
+  when "/.well-known/trust-token/issuance"
     issue()
   when "/.well-known/trust-token/redemption"
     redemption()

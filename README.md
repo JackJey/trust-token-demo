@@ -72,3 +72,29 @@ POST /.well-known/trust-token/send-srr
 ```
 
 Send SRR endpoint, which echo back Sec-Signed-Redemtption-Record header which client sends as response.
+
+
+## Command
+
+[bin/main](./bin/main) is build result of [c/main.c](c/main.c).
+
+this command has flag for trust token operation.
+
+```sh
+$ main --issue $REQUEST
+$ main --redeem $REQUEST
+$ main --key-generate
+```
+
+### --issue
+
+take issueance request (Sec-Trust-Token HTTP Header) and return a issuance response.
+
+### --redeem
+
+take redemption request (Sec-Trust-Token HTTP Header) and return a redemption response.
+
+### --key-generate
+
+generate, Priv/Pub key for trust-token and ED25519 keypair.
+save them into each files in [./keys](./keys) dir.
