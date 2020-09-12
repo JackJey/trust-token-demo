@@ -1,10 +1,9 @@
+const fs = require("fs");
 const childProcess = require("child_process");
 const util = require("util");
 const exec = util.promisify(childProcess.exec);
 const express = require("express");
 const app = express();
-
-const trust_token_key = require("./trust_token_key.json");
 
 app.use(express.static("."));
 
@@ -16,8 +15,8 @@ app.get("/.well-known/trust-token/key-commitment", (req, res) => {
   console.log(req.path);
   const { trust_token } = require("./package.json");
   const { ISSUER, protocol_version, batchsize, expiry } = trust_token;
-  const srrkey = trust_token_key.srr_pub_key_base64;
-  const Y = trust_token_key.pub_key_base64;
+  const srrkey = fs.readFileSync('./keys/srr_pub_key.txt').toString();
+  const Y = fs.readFileSync('./keys/pub_key.txt').toString();
 
   const COMMITMENT = {};
   COMMITMENT[ISSUER] = {

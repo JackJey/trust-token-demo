@@ -14,12 +14,10 @@ def log(*a)
 end
 
 def key_commitment()
-  trust_token_key = JSON.parse(File.read('./trust_token_key.json'))
   trust_token     = JSON.parse(File.read('./package.json'))['trust_token']
-  log(trust_token)
 
-  srrkey           = trust_token_key['srr_pub_key_base64']
-  y                = trust_token_key['pub_key_base64']
+  srrkey           = File.read('./keys/srr_pub_key.txt')
+  y                = File.read('./keys/pub_key.txt')
   issuer           = trust_token['ISSUER']
   protocol_version = trust_token['protocol_version']
   batchsize        = trust_token['batchsize']
@@ -55,7 +53,7 @@ end
 def issue()
   sec_trust_token = ENV["HTTP_SEC_TRUST_TOKEN"]
 
-  token = `./bin/issue #{sec_trust_token}`
+  token = `./bin/main --issue #{sec_trust_token}`
 
   headers = {
     "Content-Type"   => "text/html; charset=utf-8",
@@ -73,7 +71,7 @@ end
 def redemption()
   sec_trust_token = ENV["HTTP_SEC_TRUST_TOKEN"]
 
-  token = `./bin/redemption #{sec_trust_token}`
+  token = `./bin/main --redeem #{sec_trust_token}`
 
   headers = {
     "Content-Type"   => "text/html; charset=utf-8",

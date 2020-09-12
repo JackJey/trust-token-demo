@@ -1,20 +1,21 @@
 #include <stdio.h>
 #include <openssl/evp.h>
-#include <openssl/rand.h>
 #include <openssl/trust_token.h>
 #include "util.h"
+
 
 /**
  * success: 1
  * error: 0
  */
-int issue(uint8_t *request_base64, size_t request_base64_len, uint8_t **response_base64, size_t *response_base64_len) {
+int redeem(uint8_t *request_base64, size_t request_base64_len, uint8_t **response_base64, size_t *response_base64_len) {
   // 1. Sec-Trust-Token
-  // fprintf(stderr, "\e[0;31mISSUE REQUEST(%lu)\e[0m: %s\n\n", request_base64_len, request_base64);
+  // fprintf(stderr, "\e[0;31mREDEEM REQUEST(%lu)\e[0m: %s\n", request_base64_len, request_base64);
 
   // 2. Base64 decode
   size_t request_len;
-  uint8_t* request; base64_decode(request_base64, request_base64_len, &request, &request_len);
+  uint8_t* request;
+  base64_decode(request_base64, request_base64_len, &request, &request_len);
 
   // 3. Trust Token Issuer
   const TRUST_TOKEN_METHOD *method = TRUST_TOKEN_experiment_v1();
@@ -74,34 +75,28 @@ int issue(uint8_t *request_base64, size_t request_base64_len, uint8_t **response
     return 0;
   }
 
-  /// issue
+  /// redeem
 
-  // 1. Generate 32byte random bytes for key to encrypt Private Metadata
+  // 7. issuer redeem
+  // validate redeemed token
+  // if token is valid , SSR generated with |lifetime| sec
+  // signed requested data & token are |out|
   // 1:success, 0:error
-  uint8_t metadata_key[32];
-  RAND_bytes(metadata_key, sizeof(metadata_key));
-  if (!TRUST_TOKEN_ISSUER_set_metadata_key(issuer, metadata_key, sizeof(metadata_key))) {
-    fprintf(stderr, "failed to generate trust token metadata key.\n");
-    return 0;
-  }
-
-  // hexdump(metadata_key, sizeof(metadata_key));
-
-  // 2. ISSUER token based on request
-  // 1:success, 0:error
-  uint8_t* response = NULL;
-  size_t   response_len, tokens_issued;
-  size_t   max_issuance     = 10;
-  uint8_t  public_metadata  = 0x0001;
-  uint8_t  private_metadata = 0;
-  if (!TRUST_TOKEN_ISSUER_issue(issuer,
-                                &response, &response_len,
-                                &tokens_issued,
-                                request, request_len,
-                                public_metadata,
-                                private_metadata,
-                                max_issuance)) {
-    fprintf(stderr, "failed to issue in TRUST_TOKEN Issuer.\n");
+  uint8_t  *response = NULL;
+  size_t   response_len;
+  TRUST_TOKEN *rtoken;
+  uint8_t  *client_data;
+  size_t   client_data_len;
+  uint64_t redemption_time;
+  int lifetime = 600;
+  if (!TRUST_TOKEN_ISSUER_redeem(issuer,
+                                 &response, &response_len,
+                                 &rtoken,
+                                 &client_data, &client_data_len,
+                                 &redemption_time,
+                                 request, request_len,
+                                 lifetime)) {
+    fprintf(stderr, "failed to redeem in TRUST_TOKEN Issuer.\n");
     return 0;
   }
 
@@ -111,7 +106,7 @@ int issue(uint8_t *request_base64, size_t request_base64_len, uint8_t **response
     return 0;
   }
 
-  // fprintf(stderr, "\e[0;31mISSUE RESPONSE(%ld)\e[0m: %s\n\n", *response_base64_len, *response_base64);
+  // fprintf(stderr, "\e[0;31mREDEEM RESPONSE(%ld)\e[0m: %s\n", *response_base64_len, *response_base64);
 
   return 1;
 }

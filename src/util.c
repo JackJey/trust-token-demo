@@ -41,20 +41,58 @@ int read_file(char *file_name, uint8_t **file_body, size_t *file_size) {
   return 1;
 }
 
+/**
+ * success: 1
+ * error: 0
+ */
+int write_file(char *file_name, uint8_t *file_body, size_t file_size) {
+  FILE *fp = fopen(file_name, "wb+");
+  if (fp == NULL) {
+    fprintf(stderr, "failed to open file: %s", file_name);
+    return 0;
+  }
 
-void hexdump(uint8_t *s, size_t len) {
-  for(int i = 0; i < 3; i++) {
-    fprintf(stderr, "0x%02x,", s[i]);
+  size_t size = fwrite(file_body, sizeof(uint8_t), file_size, fp);
+  if (size != file_size) {
+    fprintf(stderr, "failed to write data: %ld", size);
+    return 0;
   }
-  fprintf(stderr, "...");
-  for(int j = len-3; j < len; j++) {
-    fprintf(stderr, "0x%02x,", s[j]);
+
+  fprintf(stderr, "size: %ld", size);
+
+  if (EOF == fclose(fp)) {
+    fprintf(stderr, "failed to close file: %s", file_name);
+    return 0;
   }
-  fprintf(stderr, "\n");
+
+  return 1;
 }
 
-int base64_encode(uint8_t *buff, size_t buff_len,
-                  uint8_t **out, size_t *out_len) {
+void hexdump(uint8_t *s, size_t len) {
+  char dump[33];
+  int index = 0;
+  int loop  = 0;
+
+  // first 3 byte
+  for(loop=0, index=0; loop<3; loop++, index+=5) {
+    sprintf((char*)(dump+index),"0x%02x,", s[loop]);
+  }
+  // ...
+  sprintf((char*)(dump+index), "%s", "...");
+  index+=3;
+  // last 3 byte
+  for(loop=len-3; loop<len; loop++, index+=5) {
+    sprintf((char*)(dump+index),"0x%02x,", s[loop]);
+  }
+
+  fprintf(stderr, "%s\n", dump);
+}
+
+/**
+ * success: 1
+ * error: 0
+ */
+int base64_encode(uint8_t *buff, size_t buff_len, uint8_t **out, size_t *out_len) {
   size_t encoded_len;
   if (!EVP_EncodedLength(&encoded_len, buff_len)) {
     fprintf(stderr, "failed to calculate base64 length");
@@ -66,8 +104,11 @@ int base64_encode(uint8_t *buff, size_t buff_len,
   return 1;
 }
 
-int base64_decode(uint8_t *buff, size_t buff_len,
-                  uint8_t **out, size_t *out_len) {
+/**
+ * success: 1
+ * error: 0
+ */
+int base64_decode(uint8_t *buff, size_t buff_len, uint8_t **out, size_t *out_len) {
   size_t decoded_len;
   if (!EVP_DecodedLength(&decoded_len, buff_len)) {
     fprintf(stderr, "failed to calculate decode length\n");
@@ -81,4 +122,3 @@ int base64_decode(uint8_t *buff, size_t buff_len,
   }
   return 1;
 }
-
