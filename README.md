@@ -1,84 +1,135 @@
-# Trust Token DEMO
+# Trust Token demo
 
-DEMO of Trust Token API based on boringssl.
+[Trust Tokens](https://github.com/WICG/trust-token-api) is a new API to convey trust from one context to another without passive tracking, in order to help combat fraud and distinguish bots from real humans.
 
-https://trust-token-demo.glitch.me/
+Trust tokens enable an origin to issue cryptographic tokens to a user it trusts. Tokens are stored by the user's browser, and can later be redeemed in other contexts to confirm that the user is a real human.
 
-## How to use
+For example, authenticity established for a user on a social media or email site can be conveyed to another site such as a news publisher or online store.
 
-1. open Google Chrome Canary &gt; M87 with flag shown in page
-2. click Yes button for "Are you a human"
-3. you can see Redemption Record in page
+Find out more: [Getting started with Trust Tokens](/trust-tokens).
 
-## How to build
+This repo provides code to demonstrate Trust Token using [BoringSSL](https://boringssl.googlesource.com/boringssl/) 
+to create an issuance service. 
 
-### boringssl
+You can try out this demo online at [trust-token-demo.glitch.me](https://trust-token-demo.glitch.me/) 
+or download, build and run it yourself.
 
-this demo requires boringssl, kick `./install-boringssl.sh` for download/build.
+Find out more: [Getting started with Trust Tokens](https://web.dev/trust-tokens/).
+
+---
+
+**Please note: this demo does not provide code suitable for production use. The Trust Tokens API is still experimental, and is undergoing an [origin trial](https://web.dev/origin-trials) in Chrome. The Trust Tokens API and this demo may change without notice at any time.**
+
+**Also be aware that the demo enables both [issuance and redemption](https://github.com/WICG/trust-token-api#trust-token-issuance), whereas in real-world applications, issuers (sites that issue tokens) are likely to be different from redeemers (sites that redeem tokens).**
+
+---
+
+## Install and run this demo
+
+The following instructions are oriented to a Linux environment, but could potentially be ported to 
+MacOS, or run on Windows by using [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) 
+(in Windows 10) or by installing [Cygwin](https://www.cygwin.com/) or other environments.
+
+Note that it takes several minutes to download the code, install and build BoringSSL (and cmake if 
+necessary).
+
+### Get an origin trial token
+
+The Trust Token API is currently available as a [Chrome origin trial](https://web.dev/origin-trials). 
+You can try out Trust Tokens online at [trust-token-demo.glitch.me](https://trust-token-demo.glitch.me/). 
+
+However, to run the demo yourself, you will need to [register for a Trust Token origin trial token](https://developers.chrome.com/origintrials/#/view_trial/2479231594867458049).
+
+### Download the code
 
 ```sh
-$ ./install-boringssl.sh
+git clone git@github.com:JackJey/trust-token-demo.git
 ```
 
-### build c command
-
-build [c](./c) command with boringssl.
+All the commands below should be run from the top-level `trust-token-demo` directory:
 
 ```sh
-$ make
+cd trust-token-demo
 ```
 
-### up http server
+### If necessary, install cmake
 
-run http demo with express
+To build this demo you will need the [cmake build tool](https://cmake.org/download/), which is 
+pre-installed on many Linux distributions. On MacOS, you can use [Homebrew](https://brew.sh/) to 
+install cmake.
+
+
+### Install BoringSSL
+
+Run the [install-boringssl.sh](install-boringssl.sh) script to download and build BoringSSL:
 
 ```sh
-$ npm install
-$ npm start
+./install-boringssl.sh
 ```
 
-note: you need origin trials token.
+### Build executables
 
-## API
+Build the executable files required for the demo, using the BoringSSL library and the C files in 
+the [src](src) directory as defined in the [Makefile](Makefile):
 
-### Key Commitment
+```sh
+make
+```
 
+### Install Node dependencies
+
+The demo uses the Express HTTP server and other dependencies defined in [package.json](package.json). 
+
+```sh
+npm install
+```
+
+### Run the demo server
+
+Run `npm start` (defined in [server.js](server.js)) to start the demo server.
+
+```sh
+npm start
+```
+
+### Open the demo page
+
+Open [localhost:8000](http://localhost:8000) to view the demo page defined in [index.html](index.html).
+By default, this demo runs on port 8000. You can change this by updating the `scripts.start` value in 
+[package.json](package.json).
+
+## API details
+
+### Key commitment
 ```
 GET /.well-known/trust-token/key-commitment
 ```
+`key-commitment` in JSON format used by the browser.
 
-key-commitments in JSON format for browser.
-
-### Issue Request
-
+### Issue request
 ```
 POST /.well-known/trust-token/request
 ```
-
-Trust Token Issue request endpoint
+Trust Token issuance request endpoint.
 
 ### Redemption
-
 ```
 POST /.well-known/trust-token/redemption
 ```
-
-SRR Token Redemption request endpoint
+SRR token redemption request endpoint.
 
 ### Send SRR
-
 ```
 POST /.well-known/trust-token/send-srr
 ```
+Send SRR endpoint. This echoes back a `Sec-Signed-Redemtption-Record` header which the client can send
+as a response.
 
-Send SRR endpoint, which echo back Sec-Signed-Redemtption-Record header which client sends as response.
+## Commands and flags
 
+[bin/main](./bin/main) is the build result of [src/main.c](src/main.c).
 
-## Command
-
-[bin/main](./bin/main) is build result of [c/main.c](c/main.c).
-
-this command has flag for trust token operation.
+There is a flag for each Trust Token operation:
 
 ```sh
 $ main --issue $REQUEST
@@ -87,14 +138,19 @@ $ main --key-generate
 ```
 
 ### --issue
-
-take issueance request (Sec-Trust-Token HTTP Header) and return a issuance response.
+Take an issuance request (`Sec-Trust-Token HTTP Header`) and return an issuance response.
 
 ### --redeem
-
-take redemption request (Sec-Trust-Token HTTP Header) and return a redemption response.
+Take a redemption request (`Sec-Trust-Token HTTP Header`) and return a redemption response.
 
 ### --key-generate
+Generate private/public keys for a Trust Token and [ED25519](https://ed25519.cr.yp.to/) key pair 
+and save them in the [./keys](./keys) directory.
 
-generate, Priv/Pub key for trust-token and ED25519 keypair.
-save them into each files in [./keys](./keys) dir.
+## Find out more
+
+* [Getting started with Trust Tokens](https://web.dev/trust-tokens/)
+* [Trust Token API explainer](https://github.com/WICG/trust-token-api)
+* [The Chromium Projects: Trust Token API](https://www.chromium.org/updates/trust-token)
+* [Origin Trials Guide for Web Developers](https://github.com/GoogleChrome/OriginTrials/blob/gh-pages/developer-guide.md)
+* [BoringSSL](https://boringssl.googlesource.com/boringssl/) 
