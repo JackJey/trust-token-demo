@@ -8,7 +8,6 @@ a {
 }
 
 a:hover {
-  color: #3740ff;
   text-decoration: none;
 }
 
@@ -16,29 +15,6 @@ body {
   font-family: sans-serif;
   font-weight: 500;
   margin: 10px 20px;
-}
-
-button {
-  background-color: #eee;
-  border: 1px solid #ccc;
-  border-radius: 2px;
-  color: #444;
-  cursor: pointer;
-  display: block;
-  font-size: 22px; /* fallback */
-  font-size: var(--mobile-font-size);
-  font-weight: 500;
-  margin: 3px 0 0 0;
-  padding: 10px;
-}
-
-button:hover {
-  background-color: #ccc;
-  color: black;
-}
-
-div#code {
-  position: relative;
 }
 
 h1 {
@@ -56,8 +32,8 @@ h2 {
 
 li {
   font-size: 18px;
-  line-height: 1.4em;
-  margin: 0 0 1em -20px;
+  line-height: 1.2em;
+  margin: 0 0 0.4em 0;
 }
 
 main {
@@ -65,39 +41,17 @@ main {
   max-width: 750px;
 }
 
+video {
+  width: 100%;
+  border: 1px solid #ccc;
+}
+
 p {
   font: 400 18px / 1.77778 Segoe UI, system-ui, -apple-system, sans-serif;
 }
 
-pre {
-  background-color: #fafafa;
-  color: #666;
-  font-family: "Roboto Mono", monospace;
-  font-size: 14px;
-  font-weight: 400;
-  min-height: 30px;
-  overflow: scroll;
-  padding: 15px 50px 10px 10px;
-
-  /*  text-overflow: ellipsis; */
-}
-
 section {
   margin: 0 0 40px 0;
-}
-
-div#code svg {
-  background-color: #fafafa;
-  fill: #666;
-  cursor: pointer;
-  padding: 0 15px 15px 15px;
-  position: absolute;
-  right: 0;
-  top: 20px;
-}
-
-div#code svg:hover {
-  fill: black;
 }
 
 @media (min-width: 450px) {

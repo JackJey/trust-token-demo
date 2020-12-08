@@ -2,50 +2,89 @@
 <html lang="en">
   <head>
     <title>Trust Token demo</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="origin-trial" content="Ahn97wbJ5HK+onYAn+LhWj9lQADgSRg7VVp6ZHi0FRhp+W4iZSbAS0vYShHXYxqQ3RlnnTBAUGibBOR3yWhXJwwAAABfeyJvcmlnaW4iOiJodHRwczovL2p4Y2suaW86NDQzIiwiZmVhdHVyZSI6IlRydXN0VG9rZW5zIiwiZXhwaXJ5IjoxNjA1Njk4ODQ0LCJpc1N1YmRvbWFpbiI6dHJ1ZX0=">
-    <link rel="stylesheet" href="public/css/main.css">
-    <script src="https://cdn.jsdelivr.net/npm/cbor-js-unofficial@0.1.0-a4/cbor.min.js" defer></script>
-    <script src="public/js/issuer.js" defer></script>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="public/css/main.css" />
   </head>
   <body>
     <main>
-      <h1>🕵️‍♀️ Trust Token demo</h1>
+      <h1>Trust Token v1 DEMO</h1>
+      <p>
+        This site demonstrates Trust Token v1
+        <a href="https://github.com/WICG/trust-token-api#trust-token-issuance"
+          >issuance and redemption</a
+        >, using
+        <a href="https://boringssl.googlesource.com/boringssl/">BoringSSL</a> to
+        create an issuance service.
+      </p>
 
-      <p>This site demonstrates Trust Token <a href="https://github.com/WICG/trust-token-api#trust-token-issuance">issuance and redemption</a>, using <a href="https://boringssl.googlesource.com/boringssl/">BoringSSL</a> to create an issuance service.</p>
-      <p>View code: <a href="https://glitch.com/edit/#!/trust-tokens">Glitch</a>, <a href="https://github.com/JackJey/trust-token">GitHub</a>.</p>
-      <p>Find out more: <a href="https://web.dev/trust-tokens">Getting started with Trust Tokens</a>.</p>
-      
-      <h2>How to use this demo</h2>
-      
-      <section>
-        <p>1. Open Chrome Canary 87 (or later) from a terminal. On MacOS use the following command:</p>
-          <div id="code">
-            <svg id="copy" height="24" width="24">
-              <title>Copy code</title>
-              <path d="M0 0h24v24H0z" fill="none"/>
-              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-            </svg>
-            <pre id="flag"></pre>
-        </div>
-        <p><a href="https://www.chromium.org/developers/how-tos/run-chromium-with-flags">Run Chromium with flags</a> explains how to use Chrome with flags on other platforms.
-        </p>
-      </section>
+      <h2>
+        How to run a DEMO
+      </h2>
 
-      <section>
-        <p>2. Click the button to emulate authentication that you are a real human:</p>
-        <button id="yes">I am a human</button>
-      </section>
-      <section>
-        <p>Results are shown below and in the console.</p>
-        <pre id="result"></pre>
-      </section>
+      <p>
+        Access an URL
+        <a href="https://trust-token-redeemer-demo.glitch.me/"
+          >Trust Token Redeemer DEMO</a
+        >
+        with Chrome 87(Stable) and click a
+        <strong>"click continue to read"</strong>.
+      </p>
 
+      <video
+        controls
+        src="https://cdn.glitch.com/133fbe86-518f-4a5c-8857-0810a62fb7ae%2FTrustToken-Issuer-Redeemer-demo.mp4?v=1607433750859"
+      ></video>
+
+      <h2>
+        Resource
+      </h2>
+      <ul>
+        <li>
+          Redeemer:
+          <ul>
+            <li>
+              Demo:
+              <a href="https://trust-token-redeemer-demo.glitch.me/"
+                >https://trust-token-redeemer-demo.glitch.me/</a
+              >
+            </li>
+            <li>
+              Github:
+              <a href="https://github.com/JackJey/trust-token-redeemer-demo"
+                >https://github.com/JackJey/trust-token-redeemer-demo</a
+              >
+            </li>
+          </ul>
+        </li>
+        <li>
+          Issuer:
+          <ul>
+            <li>
+              Demo:
+              <a href="https://trust-token-issuer-demo.glitch.me/"
+                >https://trust-token-issuer-demo.glitch.me/</a
+              >
+            </li>
+            <li>
+              Github:
+              <a href="https://github.com/JackJey/trust-token-issuer-demo"
+                >https://github.com/JackJey/trust-token-issuer-demo</a
+              >
+            </li>
+          </ul>
+        </li>
+      </ul>
 
       <h2>Find out more</h2>
+
       <ul>
+        <li>
+          <a href="https://web.dev/trust-tokens"
+            >Getting started with Trust Tokens</a
+          >.
+        </li>
         <li>
           <a href="http://www.chromium.org/updates/trust-token"
             >Trust Token API: The Chromium Projects</a
@@ -83,18 +122,5 @@
         </li>
       </ul>
     </main>
-    <script>
-    var preElement = document.querySelector("pre#flag");
-    var copyButton = document.querySelector("svg#copy");
-    copyButton.onclick = () => {
-      const copyText = preElement.textContent;
-      const dummy = document.createElement('input');
-      dummy.value = copyText;
-      document.body.append(dummy);
-      dummy.select();
-      document.execCommand("copy");
-      document.body.removeChild(dummy);
-    }
-    </script>
   </body>
 </html>
