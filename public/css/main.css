@@ -1,6 +1,18 @@
-:root {
-  --desktop-font-size: 16px;
-  --mobile-font-size: 22px;
+main {
+  font-family: "Google Sans", Segoe UI, system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  color: #333;
+  margin: 0 auto;
+  max-width: 750px;
+}
+
+section {
+  margin: 0 0 40px 0;
+}
+
+h2 {
+  border-top: 1px solid #ccc;
+  padding-top: 1em;
 }
 
 a {
@@ -11,34 +23,9 @@ a:hover {
   text-decoration: none;
 }
 
-body {
-  font-family: sans-serif;
-  font-weight: 500;
-  margin: 10px 20px;
-}
-
-h1 {
-  font: 400 36px / 1.33333 "Google Sans", sans-serif;
-  margin: 0 0 20px 0;
-  padding: 0 0 5px 0;
-}
-
-h2 {
-  border-top: 1px solid #ccc;
-  font: 400 24px / 1.33333 "Google Sans", sans-serif;
-  margin: 50px 0 30px 0;
-  padding: 50px 0 0 0;
-}
-
-li {
-  font-size: 18px;
-  line-height: 1.2em;
-  margin: 0 0 0.4em 0;
-}
-
-main {
-  margin: 0 auto;
-  max-width: 750px;
+ul {
+  padding-left: 1.4em;
+  line-height: 1.8em;
 }
 
 video {
@@ -46,33 +33,9 @@ video {
   border: 1px solid #ccc;
 }
 
-p {
-  font: 400 18px / 1.77778 Segoe UI, system-ui, -apple-system, sans-serif;
-}
-
-section {
-  margin: 0 0 40px 0;
-}
-
 @media (min-width: 450px) {
   body {
     margin: 20px 50px;
-  }
-
-  button {
-    font-size: 14px; /* fallback */
-    font-size: var(--desktop-font-size);
-  }
-
-  h1 {
-    margin: 0 0 40px 0;
-  }
-
-  p {
-    color: #444;
-    line-height: 1.4em;
-    font-size: 18px;
-    font-weight: 400;
   }
 }
 
