@@ -2,7 +2,7 @@ dependencies:
   cbor: 5.1.0
   express: 4.17.1
   noble-ed25519: 1.0.1
-  structured-field-values: 0.0.2
+  structured-field-values: 0.0.3
 packages:
   /accepts/1.3.7:
     dependencies:
@@ -386,12 +386,12 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=
-  /structured-field-values/0.0.2:
+  /structured-field-values/0.0.3:
     dependencies:
       hi-base32: 0.5.0
     dev: false
     resolution:
-      integrity: sha512-lnhOQU8zT38i/dTC0azUxm0xnD2hmsOquIzpSk7JyTw7KGTGwF/4XSbNJkQGadrnzGzYWHNqF4OHvVdR/owTiA==
+      integrity: sha512-mfYWk3C6q5QeYap+r+nGZszxbo17+x1BfBdGLIkFrljwsmuFnkLOLFR4yvK4NDTL15STgAuprP75DRolTajp8A==
   /toidentifier/1.0.0:
     dev: false
     engines:
@@ -432,4 +432,4 @@ specifiers:
   cbor: ^5.1.0
   express: ^4.17.1
   noble-ed25519: ^1.0.1
-  structured-field-values: ^0.0.2
+  structured-field-values: ^0.0.3
