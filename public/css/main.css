@@ -12,33 +12,15 @@ a:hover {
   text-decoration: none;
 }
 
+em {
+  font-weight: bold;
+  font-style: normal;
+}
+
 body {
   font-family: sans-serif;
   font-weight: 500;
   margin: 10px 20px;
-}
-
-button {
-  background-color: #eee;
-  border: 1px solid #ccc;
-  border-radius: 2px;
-  color: #444;
-  cursor: pointer;
-  display: block;
-  font-size: 22px; /* fallback */
-  font-size: var(--mobile-font-size);
-  font-weight: 500;
-  margin: 3px 0 0 0;
-  padding: 10px;
-}
-
-button:hover {
-  background-color: #ccc;
-  color: black;
-}
-
-div#code {
-  position: relative;
 }
 
 h1 {
@@ -48,10 +30,15 @@ h1 {
 }
 
 h2 {
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #eee;
   font: 400 24px / 1.33333 "Google Sans", sans-serif;
-  margin: 50px 0 30px 0;
-  padding: 50px 0 0 0;
+  margin: 50px 0 10px 0;
+  padding: 20px 0 0 0;
+}
+
+h3 {
+  font: 400 20px / 1.33333 "Google Sans", sans-serif;
+  margin: 30px 0 10px 0;
 }
 
 li {
@@ -69,35 +56,13 @@ p {
   font: 400 18px / 1.77778 Segoe UI, system-ui, -apple-system, sans-serif;
 }
 
-pre {
-  background-color: #fafafa;
-  color: #666;
-  font-family: "Roboto Mono", monospace;
-  font-size: 14px;
-  font-weight: 400;
-  min-height: 30px;
-  overflow: scroll;
-  padding: 15px 50px 10px 10px;
-
-  /*  text-overflow: ellipsis; */
-}
-
 section {
   margin: 0 0 40px 0;
 }
 
-div#code svg {
-  background-color: #fafafa;
-  fill: #666;
-  cursor: pointer;
-  padding: 0 15px 15px 15px;
-  position: absolute;
-  right: 0;
-  top: 20px;
-}
-
-div#code svg:hover {
-  fill: black;
+video {
+  max-width: 100%;
+  border: solid 1px #ccc;
 }
 
 @media (min-width: 450px) {
