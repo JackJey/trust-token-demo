@@ -1,147 +1,104 @@
-const express = require("express");
+/* Copyright 2020 Google LLC. SPDX-License-Identifier: Apache-2.0 */
+
+import * as path from "path";
+import * as sfv from "structured-field-values";
+import express from "express";
+import { webcrypto, verify, KeyObject } from 'crypto';
+import { promisify } from "util";
+import { map } from "./cbor.js";
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const app = express();
 
 app.use(express.static("."));
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
+app.get("/", async (request, response) => {
+  response.sendFile(__dirname + "/index.html");
 });
 
-// app.get("/.well-known/trust-token/key-commitment", (req, res) => {
-//   console.log(req.path);
-//   const { ISSUER, protocol_version, batchsize, expiry, id } = trust_token;
-//   const srrkey = fs
-//     .readFileSync("./keys/srr_pub_key.txt")
-//     .toString()
-//     .trim();
-//   const Y = fs
-//     .readFileSync("./keys/pub_key.txt")
-//     .toString()
-//     .trim();
+app.post(`/.well-known/trust-token/send-rr`, async (req, res) => {
+  console.log(req.path);
 
-//   const key_commitment = {
-//     id,
-//     protocol_version,
-//     batchsize,
-//     srrkey,
-//     "1": { Y, expiry }
-//   };
+  const headers = req.headers;
+  console.log({ headers });
 
-//   res.set({
-//     "Access-Control-Allow-Origin": "*",
-//     "Content-Type": "application/json; charset=utf-8"
-//   });
+  // sec-redemption-record
+  // [(<issuer 1>, {"redemption-record": <SRR 1>}),
+  //  (<issuer N>, {"redemption-record": <SRR N>})],
+  const rr = sfv.decodeList(headers["sec-redemption-record"]);
+  console.log({ rr })
 
-//   res.send(JSON.stringify(key_commitment, "", " "));
-// });
+  const { value, params } = rr[0];
+  const redemption_record = Buffer.from(params["redemption-record"]).toString();
+  console.log({ redemption_record });
 
-// app.post(`/.well-known/trust-token/issuance`, async (req, res) => {
-//   console.log(req.path);
-//   const sec_trust_token = req.headers["sec-trust-token"];
-//   const result = await exec(`./bin/main --issue ${sec_trust_token}`);
-//   const token = result.stdout;
-//   res.set({
-//     "Access-Control-Allow-Origin": "*"
-//   });
-//   res.append("sec-trust-token", token);
-//   res.send();
-// });
+  // verify client_public_key
+  const sec_signature = sfv.decodeDict(headers["sec-signature"]);
+  const signatures = sec_signature.signatures.value[0];
+  const client_public_key = signatures.params["public-key"];
+  const sig = signatures.params["sig"];
 
-// app.post(`/.well-known/trust-token/redemption`, async (req, res) => {
-//   console.log(req.path);
-//   const sec_trust_token = req.headers["sec-trust-token"];
-//   const result = await exec(`./bin/main --redeem ${sec_trust_token}`);
-//   const token = result.stdout;
-//   res.set({
-//     "Access-Control-Allow-Origin": "*"
-//   });
-//   res.append("sec-trust-token", token);
-//   res.send();
-// });
+  console.log({ sec_signature });
+  console.log({ signatures })
+  console.log({ client_public_key });
+  console.log({ sig });
 
-// app.post(`/.well-known/trust-token/send-srr`, async (req, res) => {
-//   console.log(req.path);
+  const destination = "trust-token-redeemer-demo.glitch.me";
 
-//   const headers = req.headers;
+  // verify sec-signature
+  const canonical_request_data = new Map([
+    ["destination", destination],
+    ["sec-redemption-record", headers["sec-redemption-record"]],
+    ["sec-time", headers["sec-time"]],
+    ["sec-trust-tokens-additional-signing-data", headers["sec-trust-tokens-additional-signing-data"]],
+    ["public-key", client_public_key],
+  ]);
 
-//   // sec-signed-redemption-record
-//   // [(<issuer 1>, {"redemption-record": <SRR 1>}),
-//   //  (<issuer N>, {"redemption-record": <SRR N>})],
-//   const srr = sfv.parseList(headers["sec-signed-redemption-record"]);
-//   const redemption_record = sfv.parseDict(
-//     Buffer.from(srr[0]["params"]["redemption-record"]).toString()
-//   );
+  console.log(canonical_request_data)
 
-//   const { body, signature } = redemption_record;
+  const cbor_data = map(canonical_request_data);
+  const prefix = Buffer.from(headers["sec-trust-token-version"])
+  console.log({ prefix })
+  const signing_data = new Uint8Array([...prefix, ...cbor_data]);
 
-//   // verify signature
-//   const srr_public_key = Buffer.from(
-//     fs.readFileSync("./keys/srr_pub_key.txt").toString(),
-//     "base64"
-//   );
-//   const srr_verify = await ed25519.verify(
-//     signature.value,
-//     body.value,
-//     srr_public_key
-//   );
-//   console.log({ srr_verify });
+  console.log({
+    sig,
+    signing_data,
+    client_public_key,
+    sig_len: sig.length,
+    signing_data_len: signing_data.length,
+    client_public_key_len: client_public_key.length
+  })
 
-//   // parse SRR
-//   const srr_body = cbor.decodeAllSync(Buffer.from(body.value))[0];
-//   const metadata = srr_body["metadata"];
-//   const token_hash = srr_body["token-hash"];
-//   const client_data = srr_body["client-data"];
-//   const key_hash = client_data["key-hash"];
-//   const redeeming_origin = client_data["redeeming_origin"];
-//   const redeeming_timestamp = client_data["redeeming_timestamp"];
-//   const expiry_timestamp = srr_body["expiry-timestamp"];
+  const key = await webcrypto.subtle.importKey(
+    'raw',
+    client_public_key,
+    {
+      name: "ECDSA",
+      namedCurve: "P-256"
+    },
+    true,
+    ['verify']
+  );
 
-//   // verify client_public_key
-//   const sec_signature = sfv.parseDict(headers["sec-signature"]);
-//   const client_public_key =
-//     sec_signature.signatures.value[0].params["public-key"];
-//   const sig = sec_signature.signatures.value[0].params["sig"];
+  console.log(key)
 
-//   const client_public_key_hash = crypto
-//     .createHash("sha256")
-//     .update(client_public_key)
-//     .digest();
-//   const public_key_verify =
-//     client_public_key_hash.toString() === key_hash.toString();
-//   console.log({ public_key_verify });
+  // verify by Node Crypto
+  const key_object = KeyObject.from(key);
+  console.log(key_object)
 
-//   // verify sec-signature
-//   const canonical_request_data = cbor.encode(
-//     new Map([
-//       ["sec-time", headers["sec-time"]],
-//       ["public-key", client_public_key],
-//       ["destination", "trust-token-demo.glitch.me"],
-//       ["sec-signed-redemption-record", headers["sec-signed-redemption-record"]],
-//       [
-//         "sec-trust-tokens-additional-signing-data",
-//         headers["sec-trust-tokens-additional-signing-data"]
-//       ]
-//     ])
-//   );
+  const sig_verify = await promisify(verify)('SHA256', signing_data, key_object, sig)
+  console.log({ sig_verify });
 
-//   const prefix = Buffer.from("Trust Token v0");
-//   const signing_data = Buffer.concat([prefix, canonical_request_data]);
-//   const sig_verify = await ed25519.verify(sig, signing_data, client_public_key);
+  res.set({
+    "Access-Control-Allow-Origin": "*"
+  });
 
-//   console.log(sig_verify);
+  res.send({ sig_verify });
+});
 
-//   res.set({
-//     "Access-Control-Allow-Origin": "*"
-//   });
-
-//   res.send({ srr_verify, public_key_verify, sig_verify });
-// });
-
+// listen for requests :)
 const listener = app.listen(process.env.PORT, () => {
-  console.log(`listening on port ${listener.address().port}`);
-});
-
-process.on("unhandledRejection", err => {
-  console.error(err);
+  console.log("Your app is listening on port " + listener.address().port);
 });
