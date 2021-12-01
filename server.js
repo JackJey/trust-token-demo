@@ -11,12 +11,18 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const app = express();
 
-app.use(express.static("."));
 
 app.get("/", async (req, res) => {
-  console.log(res.headers.host)
-  res.sendFile(__dirname + "/index.html");
+  console.log(req.headers.host)
+  if (req.headers.host === "trust-token-demo.glitch.me") {
+    return res.sendFile(__dirname + "/index.html");
+  }
+  if (req.headers.host === "trust-token-redeemer-demo.glitch.me") {
+    return res.sendFile(__dirname + "/redeemer.html");
+  }
 });
+
+app.use(express.static("."));
 
 app.post(`/.well-known/trust-token/send-rr`, async (req, res) => {
   console.log(req.path);
