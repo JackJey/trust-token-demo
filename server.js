@@ -1,11 +1,19 @@
 /* Copyright 2020 Google LLC. SPDX-License-Identifier: Apache-2.0 */
 
+import { map } from "./cbor.js";
+import { promisify } from "util";
+import { webcrypto, verify, KeyObject } from 'crypto';
+import * as childProcess from "child_process";
+import * as fs from "fs";
 import * as path from "path";
 import * as sfv from "structured-field-values";
 import express from "express";
-import { webcrypto, verify, KeyObject } from 'crypto';
-import { promisify } from "util";
-import { map } from "./cbor.js";
+
+const exec = promisify(childProcess.exec);
+
+const { trust_token } = JSON.parse(fs.readFileSync("./package.json"));
+const { ISSUER, TRUST_TOKEN_VERSION, protocol_version, batchsize, expiry, id } = trust_token;
+const Y = fs.readFileSync("./keys/pub_key.txt").toString().trim();
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -26,6 +34,57 @@ app.get("/", async (req, res) => {
 });
 
 app.use(express.static("."));
+
+app.get("/.well-known/trust-token/key-commitment", (req, res) => {
+  console.log(req.path);
+
+  const key_commitment = {}
+  key_commitment[protocol_version] = {
+    id,
+    protocol_version,
+    batchsize,
+    keys: {
+      "1": { Y, expiry }
+    }
+  };
+
+  res.set({
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json; charset=utf-8"
+  });
+
+  const json = JSON.stringify(key_commitment, "", " ");
+  res.send(json);
+});
+
+app.post(`/.well-known/trust-token/issuance`, async (req, res) => {
+  console.log(req.path);
+  const sec_trust_token = req.headers["sec-trust-token"];
+  console.log({ sec_trust_token });
+  const result = await exec(`./bin/main --issue ${sec_trust_token}`);
+  const token = result.stdout;
+  console.log({ token })
+  res.set({ "Access-Control-Allow-Origin": "*" });
+  res.append("sec-trust-token", token);
+  res.send();
+});
+
+app.post(`/.well-known/trust-token/redemption`, async (req, res) => {
+  console.log(req.path);
+  console.log(req.headers);
+  const sec_trust_token_version = req.headers["sec-trust-token-version"];
+  if (sec_trust_token_version !== "TrustTokenV3VOPRF") {
+    return res.send(400);
+  }
+  const sec_trust_token = req.headers["sec-trust-token"];
+  const result = await exec(`./bin/main --redeem ${sec_trust_token}`);
+  const token = result.stdout;
+  res.set({
+    "Access-Control-Allow-Origin": "*"
+  });
+  res.append("sec-trust-token", token);
+  res.send();
+});
 
 app.post(`/.well-known/trust-token/send-rr`, async (req, res) => {
   console.log(req.path);
