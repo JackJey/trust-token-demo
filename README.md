@@ -22,6 +22,8 @@ Find out more: [Getting started with Trust Tokens](https://web.dev/trust-tokens/
 
 **Also be aware that the demo enables both [issuance and redemption](https://github.com/WICG/trust-token-api#trust-token-issuance), whereas in real-world applications, issuers (sites that issue tokens) are likely to be different from redeemers (sites that redeem tokens).**
 
+**This is not a Google product.**
+
 ---
 
 ## Install and run this demo
