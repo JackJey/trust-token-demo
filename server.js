@@ -12,7 +12,7 @@ import express from "express";
 const exec = promisify(childProcess.exec);
 
 const { trust_token } = JSON.parse(fs.readFileSync("./package.json"));
-const { ISSUER, TRUST_TOKEN_VERSION, protocol_version, batchsize, expiry, id } = trust_token;
+const { ISSUER, REDEEMER, TRUST_TOKEN_VERSION, protocol_version, batchsize, expiry, id } = trust_token;
 const Y = fs.readFileSync("./keys/pub_key.txt").toString().trim();
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -23,13 +23,13 @@ const app = express();
 app.get("/", async (req, res) => {
   console.log(req.headers.host)
   if (req.headers.host === "trust-token-demo.glitch.me") {
-    return res.sendFile(__dirname + "/index.html");
+    return res.sendFile(__dirname + "/public/html/index.html");
   }
   if (req.headers.host === "trust-token-redeemer-demo.glitch.me") {
-    return res.sendFile(__dirname + "/redeemer.html");
+    return res.sendFile(__dirname + "/public/html/redeemer.html");
   }
   if (req.headers.host === "trust-token-issuer-demo.glitch.me") {
-    return res.sendFile(__dirname + "/issuer.html");
+    return res.sendFile(__dirname + "/public/html/issuer.html");
   }
 });
 
@@ -73,15 +73,13 @@ app.post(`/.well-known/trust-token/redemption`, async (req, res) => {
   console.log(req.path);
   console.log(req.headers);
   const sec_trust_token_version = req.headers["sec-trust-token-version"];
-  if (sec_trust_token_version !== "TrustTokenV3VOPRF") {
+  if (sec_trust_token_version !== protocol_version) {
     return res.send(400);
   }
   const sec_trust_token = req.headers["sec-trust-token"];
   const result = await exec(`./bin/main --redeem ${sec_trust_token}`);
   const token = result.stdout;
-  res.set({
-    "Access-Control-Allow-Origin": "*"
-  });
+  res.set({ "Access-Control-Allow-Origin": "*" });
   res.append("sec-trust-token", token);
   res.send();
 });
@@ -113,11 +111,9 @@ app.post(`/.well-known/trust-token/send-rr`, async (req, res) => {
   console.log({ client_public_key });
   console.log({ sig });
 
-  const destination = "trust-token-redeemer-demo.glitch.me";
-
   // verify sec-signature
   const canonical_request_data = new Map([
-    ["destination", destination],
+    ["destination", REDEEMER],
     ["sec-redemption-record", headers["sec-redemption-record"]],
     ["sec-time", headers["sec-time"]],
     ["sec-trust-tokens-additional-signing-data", headers["sec-trust-tokens-additional-signing-data"]],
@@ -160,10 +156,7 @@ app.post(`/.well-known/trust-token/send-rr`, async (req, res) => {
   const sig_verify = await promisify(verify)('SHA256', signing_data, key_object, sig)
   console.log({ sig_verify });
 
-  res.set({
-    "Access-Control-Allow-Origin": "*"
-  });
-
+  res.set({ "Access-Control-Allow-Origin": "*" });
   res.send({ sig_verify });
 });
 

@@ -17,8 +17,8 @@ example: src/example.c src/config.h
 	./bin/example
 
 example.v2: src/example.v2.c src/config.h
-	$(CC) src/example.v2.c -o ./bin/example src/util.o $(CFLAGS)
-	./bin/example
+	$(CC) src/example.v2.c -o ./bin/example.v2 src/util.o $(CFLAGS)
+	./bin/example.v2
 
 .PHONY: generate_key, clean, test
 generate_key:

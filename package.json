@@ -1,5 +1,5 @@
 {
-  "name": "trust-token-issuer-demo",
+  "name": "trust-token-demo",
   "version": "0.0.0",
   "description": "trust-token-demo",
   "main": "server.js",
@@ -9,11 +9,11 @@
   "dependencies": {
     "express": "^4.17.1",
     "structured-field-values": "^1.1.0",
-    "cbor": "^5.1.0",
-    "noble-ed25519": "^1.0.1"
+    "cbor": "^8.1.0"
   },
   "trust_token": {
     "ISSUER": "trust-token-issuer-demo.glitch.me",
+    "REDEEMER": "trust-token-redeemer-demo.glitch.me",
     "TRUST_TOKEN_VERSION": "TrustTokenV3",
     "id": 4,
     "protocol_version": "TrustTokenV3VOPRF",

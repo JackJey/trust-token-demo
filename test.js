@@ -16,8 +16,6 @@ function hex(bin) {
   }).join(' ')
 }
 
-
-
 // chrome canary M100
 const headers = {
   connection: 'close',
@@ -46,7 +44,6 @@ const headers = {
   'x-forwarded-host': 'trust-token-redeemer-demo.glitch.me',
   traceparent: '00-13e292de42e147719024ed500a9aa594-4b217ad6776db57e-01'
 }
-
 
 const SecSignature = sfv.decodeDict(headers["sec-signature"])
 console.log({ SecSignature })
@@ -81,7 +78,6 @@ console.log(signature)
 //     alg: 'ecdsa_secp256r1_sha256'
 //   }
 // }
-
 
 const sig = signature.params.sig
 const public_key = signature.params["public-key"]
