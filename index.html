@@ -10,60 +10,72 @@
 </head>
 <body>
   <main>
+    <article>
 
-    <h1>Trust Token v3 demos</h1>
+      <h1>Trust Token v3 demos</h1>
 
-    <p>These demos use v3 of the Trust Token API for <a href="https://github.com/WICG/trust-token-api#trust-token-issuance">issuance and redemption</a> and <a href="https://boringssl.googlesource.com/boringssl/">BoringSSL</a> to create an issuance service.</p>
+      <p>These demos use TrustTokenV3VOPRF of the Trust Token API for <a href="https://github.com/WICG/trust-token-api#trust-token-issuance">issuance and redemption</a> and <a href="https://boringssl.googlesource.com/boringssl/">BoringSSL</a> to create an issuance service.</p>
+      <section>
 
-    <h2>How to run the demos</h2>
+        <h2>How to run the demos</h2>
 
-    <ol>
-      <li>Open the <a href="https://trust-token-redeemer-demo.glitch.me/">🕵️ Trust Token Redeemer demo</a> with Chrome 98</li>
-      <li>Click a <em>"click continue to read"</em></li>
-      <li>If your browser doesn't have a token, click a link to <em>Issuer</em>.</li>
-      <li>Click a <em>Yes I'm a Human</em> to issue a new token</li>
-      <li>Redirect back to Reddemer</li>
-      <li>Click a <em>"click continue to read"</em> again, then you can read more !</li>
-    </ol>
-    <video controls src=" https://cdn.glitch.com/133fbe86-518f-4a5c-8857-0810a62fb7ae%2FTrustToken-Issuer-Redeemer-demo.mp4?v=1607433750859"></video>
+        <ol>
+          <li>Open the <a href="https://trust-token-redeemer-demo.glitch.me/">🛂 Trust Token Redeemer demo</a> with Chrome 98</li>
+          <li>Click a <em>"click continue to read"</em></li>
+          <li>If your browser doesn't have a token, click a link to <em>Issuer</em>.</li>
+          <li>Click a <em>Yes I'm a Human</em> to issue a new token</li>
+          <li>Redirect back to Reddemer</li>
+          <li>Click a <em>"click continue to read"</em> again, then you can read more !</li>
+        </ol>
+        <video controls src=" https://cdn.glitch.com/133fbe86-518f-4a5c-8857-0810a62fb7ae%2FTrustToken-Issuer-Redeemer-demo.mp4?v=1607433750859"></video>
+      </section>
+      <section>
 
-    <h2>Resources</h2>
+        <h2>Resources</h2>
+        <section>
 
-    <h3>Redeemer</h3>
-    <dl>
-      <dt>Demo:</dt>
-      <dd>
-        <a href="https://trust-token-redeemer-demo.glitch.me/">trust-token-redeemer-demo.glitch.me/</a>
-      </dd>
-      <dt>Code:</dt>
-      <dd>
-        <a href="https://github.com/JackJey/trust-token-redeemer-demo">github.com/JackJey/trust-token-redeemer-demo</a>
-      </dd>
-    </dl>
+          <h3>Redeemer</h3>
+          <dl>
+            <dt>Demo:</dt>
+            <dd>
+              <a href="https://trust-token-redeemer-demo.glitch.me/">trust-token-redeemer-demo.glitch.me/</a>
+            </dd>
+            <dt>Code:</dt>
+            <dd>
+              <a href="https://github.com/JackJey/trust-token-redeemer-demo">github.com/JackJey/trust-token-redeemer-demo</a>
+            </dd>
+          </dl>
+        </section>
+        <section>
 
-    <h3>Issuer</h3>
-    <dl>
-      <dt>Demo:</dt>
-      <dd>
-        <a href="https://trust-token-issuer-demo.glitch.me/">trust-token-issuer-demo.glitch.me/</a>
-      </dd>
-      <dt>Code:</dt>
-      <dd>
-        <a href="https://github.com/JackJey/trust-token-issuer-demo">github.com/JackJey/trust-token-issuer-demo</a>
-      </dd>
-    </dl>
+          <h3>Issuer</h3>
+          <dl>
+            <dt>Demo:</dt>
+            <dd>
+              <a href="https://trust-token-issuer-demo.glitch.me/">trust-token-issuer-demo.glitch.me/</a>
+            </dd>
+            <dt>Code:</dt>
+            <dd>
+              <a href="https://github.com/JackJey/trust-token-issuer-demo">github.com/JackJey/trust-token-issuer-demo</a>
+            </dd>
+          </dl>
+        </section>
+      </section>
+      <section>
 
-    <h2>Find out more</h2>
+        <h2>Find out more</h2>
 
-    <ul>
-      <li><a href="https://web.dev/trust-tokens">Getting started with Trust Tokens</a></li>
-      <li><a href="http://www.chromium.org/updates/trust-token">Trust Token API: The Chromium Projects</a></li>
-      <li><a href="https://groups.google.com/a/chromium.org/g/blink-dev/c/UIvia1WwIhk">Intent to Experiment: Trust Token API</a></li>
-      <li><a href="https://bugs.chromium.org/p/chromium/issues/detail?id=1014199">Chromium tracking bug</a></li>
-      <li><a href="https://github.com/WICG/trust-token-api#trust-token-api-explainer">API explainer</a></li>
-      <li><a href="https://github.com/WICG/trust-token-api/blob/master/ISSUER_PROTOCOL.md">TrustToken V1 Issuer Protocol</a></li>
-      <li><a href="https://source.chromium.org/chromium/chromium/src/+/master:third_party/boringssl/src/crypto/trust_token/trust_token_test.cc">boringssl/src/crypto/trust_token/trust_token_test.cc</a></li>
-    </ul>
+        <ul>
+          <li><a href="https://web.dev/trust-tokens">Getting started with Trust Tokens</a></li>
+          <li><a href="http://www.chromium.org/updates/trust-token">Trust Token API: The Chromium Projects</a></li>
+          <li><a href="https://groups.google.com/a/chromium.org/g/blink-dev/c/UIvia1WwIhk">Intent to Experiment: Trust Token API</a></li>
+          <li><a href="https://bugs.chromium.org/p/chromium/issues/detail?id=1014199">Chromium tracking bug</a></li>
+          <li><a href="https://github.com/WICG/trust-token-api#trust-token-api-explainer">API explainer</a></li>
+          <li><a href="https://github.com/WICG/trust-token-api/blob/master/ISSUER_PROTOCOL.md">TrustToken V1 Issuer Protocol</a></li>
+          <li><a href="https://source.chromium.org/chromium/chromium/src/+/master:third_party/boringssl/src/crypto/trust_token/trust_token_test.cc">boringssl/src/crypto/trust_token/trust_token_test.cc</a></li>
+        </ul>
+      </section>
+    </article>
   </main>
 </body>
 </html>
