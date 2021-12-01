@@ -1,14 +1,4 @@
-const fs = require("fs");
-const crypto = require("crypto");
-const childProcess = require("child_process");
-const util = require("util");
-const exec = util.promisify(childProcess.exec);
 const express = require("express");
-const cbor = require("cbor");
-const sfv = require("structured-field-values");
-const ed25519 = require("noble-ed25519");
-
-const { trust_token } = require("./package.json");
 
 const app = express();
 
