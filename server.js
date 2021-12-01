@@ -14,7 +14,7 @@ const exec = promisify(childProcess.exec);
 const { trust_token } = JSON.parse(fs.readFileSync("./package.json"));
 const { ISSUER, REDEEMER, TRUST_TOKEN_VERSION, protocol_version, batchsize, expiry, id } = trust_token;
 const Y = fs.readFileSync("./keys/pub_key.txt").toString().trim();
-
+const BASE64FORMAT = /^[a-zA-Z0-9+/=]+$/
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const app = express();
@@ -61,6 +61,9 @@ app.post(`/.well-known/trust-token/issuance`, async (req, res) => {
   console.log(req.path);
   const sec_trust_token = req.headers["sec-trust-token"];
   console.log({ sec_trust_token });
+  if (sec_trust_token.match(BASE64FORMAT) === null) {
+    return res.status(400).send("invalid trust token");
+  }
   const result = await exec(`./bin/main --issue ${sec_trust_token}`);
   const token = result.stdout;
   console.log({ token })
@@ -74,9 +77,12 @@ app.post(`/.well-known/trust-token/redemption`, async (req, res) => {
   console.log(req.headers);
   const sec_trust_token_version = req.headers["sec-trust-token-version"];
   if (sec_trust_token_version !== protocol_version) {
-    return res.send(400);
+    return res.send(400).send("unsupported trust token version");
   }
   const sec_trust_token = req.headers["sec-trust-token"];
+  if (sec_trust_token.match(BASE64FORMAT) === null) {
+    return res.status(400).send("invalid trust token");
+  }
   const result = await exec(`./bin/main --redeem ${sec_trust_token}`);
   const token = result.stdout;
   res.set({ "Access-Control-Allow-Origin": "*" });
