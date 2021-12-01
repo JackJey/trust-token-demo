@@ -6,12 +6,12 @@ Trust tokens enable an origin to issue cryptographic tokens to a user it trusts.
 
 For example, authenticity established for a user on a social media or email site can be conveyed to another site such as a news publisher or online store.
 
-Find out more: [Getting started with Trust Tokens](/trust-tokens).
+Find out more: [Getting started with Trust Tokens](https://web.dev/trust-tokens).
 
-This repo provides code to demonstrate Trust Token using [BoringSSL](https://boringssl.googlesource.com/boringssl/) 
-to create an issuance service. 
+This repo provides code to demonstrate Trust Token using [BoringSSL](https://boringssl.googlesource.com/boringssl/)
+to create an issuance service.
 
-You can try out this demo online at [trust-token-demo.glitch.me](https://trust-token-demo.glitch.me/) 
+You can try out this demo online at [trust-token-demo.glitch.me](https://trust-token-demo.glitch.me/)
 or download, build and run it yourself.
 
 Find out more: [Getting started with Trust Tokens](https://web.dev/trust-tokens/).
@@ -28,17 +28,15 @@ Find out more: [Getting started with Trust Tokens](https://web.dev/trust-tokens/
 
 ## Install and run this demo
 
-The following instructions are oriented to a Linux environment, but could potentially be ported to 
-MacOS, or run on Windows by using [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) 
-(in Windows 10) or by installing [Cygwin](https://www.cygwin.com/) or other environments.
+The following instructions are oriented to a Linux environment.
 
-Note that it takes several minutes to download the code, install and build BoringSSL (and cmake if 
+Note that it takes several minutes to download the code, install and build BoringSSL (and cmake if
 necessary).
 
 ### Get an origin trial token
 
-The Trust Token API is currently available as a [Chrome origin trial](https://web.dev/origin-trials). 
-You can try out Trust Tokens online at [trust-token-demo.glitch.me](https://trust-token-demo.glitch.me/). 
+The Trust Token API is currently available as a [Chrome origin trial](https://web.dev/origin-trials).
+You can try out Trust Tokens online at [trust-token-demo.glitch.me](https://trust-token-demo.glitch.me/).
 
 However, to run the demo yourself, you will need to [register for a Trust Token origin trial token](https://developers.chrome.com/origintrials/#/view_trial/2479231594867458049).
 
@@ -56,10 +54,7 @@ cd trust-token-demo
 
 ### If necessary, install cmake
 
-To build this demo you will need the [cmake build tool](https://cmake.org/download/), which is 
-pre-installed on many Linux distributions. On MacOS, you can use [Homebrew](https://brew.sh/) to 
-install cmake.
-
+To build this demo you will need the [cmake build tool](https://cmake.org/download/).
 
 ### Install BoringSSL
 
@@ -71,7 +66,7 @@ Run the [install-boringssl.sh](install-boringssl.sh) script to download and buil
 
 ### Build executables
 
-Build the executable files required for the demo, using the BoringSSL library and the C files in 
+Build the executable files required for the demo, using the BoringSSL library and the C files in
 the [src](src) directory as defined in the [Makefile](Makefile):
 
 ```sh
@@ -80,7 +75,7 @@ make
 
 ### Install Node dependencies
 
-The demo uses the Express HTTP server and other dependencies defined in [package.json](package.json). 
+The demo uses the Express HTTP server and other dependencies defined in [package.json](package.json).
 
 ```sh
 npm install
@@ -97,33 +92,41 @@ npm start
 ### Open the demo page
 
 Open [localhost:8000](http://localhost:8000) to view the demo page defined in [index.html](index.html).
-By default, this demo runs on port 8000. You can change this by updating the `scripts.start` value in 
+By default, this demo runs on port 8000. You can change this by updating the `scripts.start` value in
 [package.json](package.json).
 
 ## API details
 
 ### Key commitment
+
 ```
 GET /.well-known/trust-token/key-commitment
 ```
+
 `key-commitment` in JSON format used by the browser.
 
 ### Issue request
+
 ```
 POST /.well-known/trust-token/request
 ```
+
 Trust Token issuance request endpoint.
 
 ### Redemption
+
 ```
 POST /.well-known/trust-token/redemption
 ```
+
 SRR token redemption request endpoint.
 
 ### Send SRR
+
 ```
 POST /.well-known/trust-token/send-srr
 ```
+
 Send SRR endpoint. This echoes back a `Sec-Signed-Redemtption-Record` header which the client can send
 as a response.
 
@@ -140,19 +143,22 @@ $ main --key-generate
 ```
 
 ### --issue
+
 Take an issuance request (`Sec-Trust-Token HTTP Header`) and return an issuance response.
 
 ### --redeem
+
 Take a redemption request (`Sec-Trust-Token HTTP Header`) and return a redemption response.
 
 ### --key-generate
-Generate private/public keys for a Trust Token and [ED25519](https://ed25519.cr.yp.to/) key pair 
+
+Generate private/public keys for a Trust Token and [ED25519](https://ed25519.cr.yp.to/) key pair
 and save them in the [./keys](./keys) directory.
 
 ## Find out more
 
-* [Getting started with Trust Tokens](https://web.dev/trust-tokens/)
-* [Trust Token API explainer](https://github.com/WICG/trust-token-api)
-* [The Chromium Projects: Trust Token API](https://www.chromium.org/updates/trust-token)
-* [Origin Trials Guide for Web Developers](https://github.com/GoogleChrome/OriginTrials/blob/gh-pages/developer-guide.md)
-* [BoringSSL](https://boringssl.googlesource.com/boringssl/) 
+- [Getting started with Trust Tokens](https://web.dev/trust-tokens/)
+- [Trust Token API explainer](https://github.com/WICG/trust-token-api)
+- [The Chromium Projects: Trust Token API](https://www.chromium.org/updates/trust-token)
+- [Origin Trials Guide for Web Developers](https://github.com/GoogleChrome/OriginTrials/blob/gh-pages/developer-guide.md)
+- [BoringSSL](https://boringssl.googlesource.com/boringssl/)
