@@ -1,0 +1,41 @@
+<!-- Copyright 2020 Google LLC. SPDX-License-Identifier: Apache-2.0 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="origin-trial" content="AtRb7Ac0rUS/5ffppuD2hoLoTOauhxgzq3z9if0GBA18NlBKLClP5U75lsrgyIWm9a0G9ETmYgw4QiI6Z3WdVwYAAABmeyJvcmlnaW4iOiJodHRwczovL3RydXN0LXRva2VuLWlzc3Vlci1kZW1vLmdsaXRjaC5tZTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2NTI3NzQ0MDB9">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎫</text></svg>">
+  <link rel="stylesheet" href="public/css/issuer.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/cbor-js-unofficial@0.1.0-a4/cbor.min.js"></script>
+  <script defer src="public/js/issuer.js"></script>
+  <title>Trust Token issuer demo</title>
+</head>
+<body>
+  <main>
+    <h1>Trust Token issuer demo</h1>
+    <section>
+      <form>
+        <fieldset>
+          <legend>Are you a human?</legend>
+          <input type="checkbox" id="yes" name="human">
+          <label for="yes">Yes! I'm a human</label>
+        </fieldset>
+      </form>
+      <ul>
+        <li id="issuing">📝 Issuing token...</li>
+        <li id="issued">🎉 Successfuly issued!</li>
+        <li id="back">🔙 Now go back to the redemption demo.</li>
+      </ul>
+      <button id="refresh">Clear token</button>
+    </section>
+  </main>
+  <footer>
+    <p><a href="/.well-known/trust-token/key-commitment">View key commitment data</a></p>
+    <p><a href="https://trust-token-demo.glitch.me">More information about this demo</a></p>
+    <p><em>Please note:</em> These demos do not provide code suitable for production use. The&nbsp;Trust&nbsp;Tokens API is still experimental, and is undergoing an <a href="https://web.dev/origin-trials">origin trial</a> in Chrome. The API and the demos may change without notice at any time.</p>
+    <p>This is not a Google product.</p>
+  </footer>
+</body>
+</html>

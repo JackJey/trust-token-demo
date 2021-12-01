@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "structured-field-values": "^1.1.0"
+    "structured-field-values": "^1.1.0",
+    "cbor": "^5.1.0",
+    "noble-ed25519": "^1.0.1"
   },
   "trust_token": {
     "ISSUER": "trust-token-issuer-demo.glitch.me",

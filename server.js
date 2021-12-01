@@ -20,6 +20,9 @@ app.get("/", async (req, res) => {
   if (req.headers.host === "trust-token-redeemer-demo.glitch.me") {
     return res.sendFile(__dirname + "/redeemer.html");
   }
+  if (req.headers.host === "trust-token-issuer-demo.glitch.me") {
+    return res.sendFile(__dirname + "/issuer.html");
+  }
 });
 
 app.use(express.static("."));
