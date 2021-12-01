@@ -13,8 +13,9 @@ const app = express();
 
 app.use(express.static("."));
 
-app.get("/", async (request, response) => {
-  response.sendFile(__dirname + "/index.html");
+app.get("/", async (req, res) => {
+  console.log(res.headers.host)
+  res.sendFile(__dirname + "/index.html");
 });
 
 app.post(`/.well-known/trust-token/send-rr`, async (req, res) => {
