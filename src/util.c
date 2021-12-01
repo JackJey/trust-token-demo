@@ -1,3 +1,5 @@
+// Copyright 2020 Google LLC. SPDX-License-Identifier: Apache-2.0
+
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -48,24 +50,24 @@ int read_file(char *file_name, uint8_t **file_body, size_t *file_size) {
 int write_file(char *file_name, uint8_t *file_body, size_t file_size) {
   FILE *fp = fopen(file_name, "wb+");
   if (fp == NULL) {
-    fprintf(stderr, "failed to open file: %s", file_name);
+    fprintf(stderr, "failed to open file: %s\n", file_name);
     return 0;
   }
 
   size_t size = fwrite(file_body, sizeof(uint8_t), file_size, fp);
   if (size != file_size) {
-    fprintf(stderr, "failed to write data: %ld", size);
+    fprintf(stderr, "failed to write data: %ld\n", size);
     return 0;
   }
 
   char ln[] = {'\n'};
   if (fwrite(ln, sizeof(char), 1, fp) != 1) {
-    fprintf(stderr, "failed to write \\n: %ld", size);
+    fprintf(stderr, "failed to write \\n: %ld\n", size);
     return 0;
   }
 
   if (EOF == fclose(fp)) {
-    fprintf(stderr, "failed to close file: %s", file_name);
+    fprintf(stderr, "failed to close file: %s\n", file_name);
     return 0;
   }
 
@@ -99,7 +101,7 @@ void hexdump(uint8_t *s, size_t len) {
 int base64_encode(uint8_t *buff, size_t buff_len, uint8_t **out, size_t *out_len) {
   size_t encoded_len;
   if (!EVP_EncodedLength(&encoded_len, buff_len)) {
-    fprintf(stderr, "failed to calculate base64 length");
+    fprintf(stderr, "failed to calculate base64 length\n");
     return 0;
   }
 
