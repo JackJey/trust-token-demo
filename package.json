@@ -15,7 +15,7 @@
     "ISSUER": "trust-token-issuer-demo.glitch.me",
     "REDEEMER": "trust-token-redeemer-demo.glitch.me",
     "TRUST_TOKEN_VERSION": "TrustTokenV3",
-    "id": 4,
+    "id": 5,
     "protocol_version": "TrustTokenV3VOPRF",
     "batchsize": 3,
     "expiry": "1683980602000000"
