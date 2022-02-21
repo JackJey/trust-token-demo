@@ -18,7 +18,7 @@
     "id": 4,
     "protocol_version": "TrustTokenV3VOPRF",
     "batchsize": 3,
-    "expiry": "1643980602000000"
+    "expiry": "1683980602000000"
   },
   "type": "module",
   "engines": {
