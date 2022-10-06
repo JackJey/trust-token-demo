@@ -1,7 +1,7 @@
 # Trust Token demo
 
 - **DEMO doesn't works for now since the [origin trial](https://developer.chrome.com/origintrials/#/view_trial/2479231594867458049) is now closed. But you can still view code for trust token issuance and redemption.**
-- **We will provide updates for the status of the API on developer.chrome.com/en/docs/privacy-sandbox/trust-tokens and on [Chrome Platform Status](https://www.chromestatus.com/feature/5078049450098688).**
+- **We will provide updates for the status of the API on https://developer.chrome.com/en/docs/privacy-sandbox/trust-tokens and on [Chrome Platform Status](https://www.chromestatus.com/feature/5078049450098688).**
 - **Also be aware that the demo enables both [issuance and redemption](https://github.com/WICG/trust-token-api#trust-token-issuance), whereas in real-world applications, issuers (sites that issue tokens) are likely to be different from redeemers (sites that redeem tokens).**
 - **This is not a Google product.**
 
