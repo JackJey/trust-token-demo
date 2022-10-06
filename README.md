@@ -1,5 +1,12 @@
 # Trust Token demo
 
+- **DEMO doesn't works for now since the [origin trial](https://developer.chrome.com/origintrials/#/view_trial/2479231594867458049) is now closed. But you can still view code for trust token issuance and redemption.**
+- **We will provide updates for the status of the API on developer.chrome.com/en/docs/privacy-sandbox/trust-tokens and on [Chrome Platform Status](https://www.chromestatus.com/feature/5078049450098688).**
+- **Also be aware that the demo enables both [issuance and redemption](https://github.com/WICG/trust-token-api#trust-token-issuance), whereas in real-world applications, issuers (sites that issue tokens) are likely to be different from redeemers (sites that redeem tokens).**
+- **This is not a Google product.**
+
+---
+
 [Trust Tokens](https://github.com/WICG/trust-token-api) is a new API to convey trust from one context to another without passive tracking, in order to help combat fraud and distinguish bots from real humans.
 
 Trust tokens enable an origin to issue cryptographic tokens to a user it trusts. Tokens are stored by the user's browser, and can later be redeemed in other contexts to confirm that the user is a real human.
@@ -15,16 +22,6 @@ You can try out this demo online at [trust-token-demo.glitch.me](https://trust-t
 or download, build and run it yourself.
 
 Find out more: [Getting started with Trust Tokens](https://web.dev/trust-tokens/).
-
----
-
-**Please note: this demo does not provide code suitable for production use. The Trust Tokens API is still experimental, and is undergoing an [origin trial](https://web.dev/origin-trials) in Chrome. The Trust Tokens API and this demo may change without notice at any time.**
-
-**Also be aware that the demo enables both [issuance and redemption](https://github.com/WICG/trust-token-api#trust-token-issuance), whereas in real-world applications, issuers (sites that issue tokens) are likely to be different from redeemers (sites that redeem tokens).**
-
-**This is not a Google product.**
-
----
 
 ## Install and run this demo
 
