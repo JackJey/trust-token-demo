@@ -17,6 +17,12 @@ em {
   font-style: normal;
 }
 
+strong {
+  color: red;
+  font-weight: bold;
+  font-size: 1.4em;
+}
+
 body {
   font-family: sans-serif;
   font-weight: 500;
